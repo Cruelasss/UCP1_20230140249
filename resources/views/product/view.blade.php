@@ -21,6 +21,9 @@
                         </div>
 
                         <div class="flex items-center gap-2">
+                            
+                            {{-- Hanya tampilkan tombol Edit jika user berhak (Policy update) --}}
+                            @can('update', $product)
                             <a href="{{ route('product.edit', $product) }}"
                                class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-lg border border-amber-200 dark:border-amber-800 text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/30 transition">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
@@ -30,6 +33,10 @@
                                 </svg>
                                 Edit
                             </a>
+                            @endcan
+
+                            {{-- Hanya tampilkan tombol Delete jika user berhak (Policy delete) --}}
+                            @can('delete', $product)
                             <form action="{{ route('product.destroy', $product->id) }}" method="POST"
                                   onsubmit="return confirm('Are you sure you want to delete this product?');">
                                 @csrf
@@ -44,6 +51,8 @@
                                     Delete
                                 </button>
                             </form>
+                            @endcan
+
                         </div>
                     </div>
 

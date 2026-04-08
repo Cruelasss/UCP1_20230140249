@@ -75,24 +75,28 @@
                                         <td class="px-6 py-4">
                                             <div class="flex items-center justify-center gap-2">
 
-                                                {{-- View --}}
+                                                {{-- View (Semua orang bisa melihat detail) --}}
                                                 <a href="{{ route('product.show', $product->id) }}"
                                                    class="p-1.5 rounded-md text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition"
                                                    title="View">
                                                     👁️
                                                 </a>
 
-                                                {{-- Edit --}}
+                                                {{-- Edit (Hanya pemilik yang bisa mengedit) --}}
+                                                @can('update', $product)
                                                 <a href="{{ route('product.edit', $product) }}"
                                                    class="p-1.5 rounded-md text-gray-400 hover:text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-900/30 transition"
                                                    title="Edit">
                                                     ✏️
                                                 </a>
+                                                @endcan
 
-                                                {{-- Delete --}}
-                                                <form action="{{ route('product.delete', $product->id) }}" method="POST"
+                                                {{-- Delete (Hanya pemilik ATAU admin yang bisa menghapus) --}}
+                                                @can('delete', $product)
+                                                <form action="{{ route('product.destroy', $product->id) }}" method="POST"
                                                       onsubmit="return confirm('Delete this product?')">
                                                     @csrf
+                                                    {{-- Gunakan method spoofing DELETE --}}
                                                     @method('DELETE')
                                                     <button type="submit"
                                                             class="p-1.5 rounded-md text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 transition"
@@ -100,6 +104,7 @@
                                                         🗑️
                                                     </button>
                                                 </form>
+                                                @endcan
 
                                             </div>
                                         </td>
