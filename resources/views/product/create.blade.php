@@ -118,6 +118,15 @@
                                 Save Product
                             </button>
                         </div>
+                        <div class="mb-4">
+    <label class="block text-sm font-medium mb-1">Kategori</label>
+    <select name="category_id" class="w-full bg-gray-700 border-none rounded-md">
+        <option value="">-- Pilih Kategori --</option>
+        @foreach($categories as $category)
+            <option value="{{ $category->id }}">{{ $category->name }}</option>
+        @endforeach
+    </select>
+</div>
 
                     </form>
 

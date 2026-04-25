@@ -6,21 +6,21 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function index()
-    {
-        // Menyuruh Laravel membuka file resources/views/category/index.blade.php
-        return view('category.index');
-    }
+    public function index() {
+    // withCount('products') digunakan untuk menampilkan TOTAL PRODUCT seperti di gambar
+    $categories = Category::withCount('products')->get();
+    return view('category.index', compact('categories'));
+}
 
-    public function create()
-    {
-        // Kosongkan dulu untuk sekarang
-    }
+public function create() {
+    return view('category.create');
+}
 
-    public function store(Request $request)
-    {
-        // Kosongkan dulu untuk sekarang
-    }
+public function store(Request $request) {
+    $request->validate(['name' => 'required|unique:categories,name']);
+    Category::create($request->all());
+    return redirect()->route('category.index')->with('success', 'Category saved!');
+}
 
     public function show($id)
     {
