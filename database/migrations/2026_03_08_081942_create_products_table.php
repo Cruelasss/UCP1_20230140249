@@ -20,8 +20,8 @@ return new class extends Migration
         // Relasi ke User (Pemilik Produk)
         $table->foreignId('user_id')->constrained()->onDelete('cascade');
         
-        // TAMBAHKAN INI: Relasi ke Category
-$table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
+        // Relasi ke Category
+        $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
         
         $table->timestamps();
     });
