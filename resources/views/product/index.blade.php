@@ -21,7 +21,7 @@
                         @endcan
                     </div>
 
-                    {{-- Flash Message dengan Tombol Close (X) --}}
+                    {{-- Flash Message dengan Tombol Close (OK) --}}
                     @if(session('success'))
                         <div x-data="{ show: true }" 
                              x-show="show" 
@@ -54,6 +54,7 @@
                                     <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Name</th>
                                     <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Quantity</th>
                                     <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Price</th>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Category</th>
                                     <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Owner</th>
                                     <th class="px-6 py-3 text-center text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
                                 </tr>
@@ -78,6 +79,13 @@
 
                                         <td class="px-6 py-4 text-gray-700 dark:text-gray-300 font-mono">
                                             Rp {{ number_format($product->price, 0, ',', '.') }}
+                                        </td>
+
+                                        {{-- Menampilkan Nama Kategori --}}
+                                        <td class="px-6 py-4">
+                                            <span class="px-2 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300 rounded text-xs font-medium">
+                                                {{ $product->category->name ?? 'None' }}
+                                            </span>
                                         </td>
 
                                         <td class="px-6 py-4 text-gray-500 dark:text-gray-400">
@@ -120,7 +128,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="px-6 py-12 text-center text-gray-500">
+                                        <td colspan="7" class="px-6 py-12 text-center text-gray-500">
                                             No products found.
                                         </td>
                                     </tr>
