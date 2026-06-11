@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-
+use Illuminate\Support\Facades\Auth;
 class StoreProductRequest extends FormRequest
 {
     /**
@@ -20,7 +20,7 @@ public function rules(): array
         'name' => 'required|min:5',
         'qty' => 'required|numeric',
         'price' => 'required|numeric',
-        'user_id' => 'required|exists:users,id',
+        
         'category_id' => 'required|exists:categories,id', // Validasi untuk category_id
     ];
 }

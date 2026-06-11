@@ -14,44 +14,38 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        //
-    }
+   public function index()
+{
+    $products = Product::with('category')->get();
+    return response()->json([
+        'message' => 'Daftar produk berhasil diambil',
+        'data' => $products
+    ], 200); // 200 OK
+}
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProductRequest $request)
-    {
-        try {
-            $validated = $request->validated();
+   public function store(StoreProductRequest $request)
+{
+    try {
+        // 1. Ambil data yang sudah lolos validasi (name, qty, price, category_id)
+        $validated = $request->validated();
 
-            $validated['user_id'] = Auth::id();
+        // 2. ISI OTOMATIS user_id dari user yang login lewat token
+        $validated['user_id'] = Auth::id(); 
 
-            $product = Product::create($validated);
+        // 3. Simpan ke database
+        $product = Product::create($validated);
 
-            Log::info('Menambah data produk', [
-                'list' => $product
-            ]);
-
-            return response()->json([
-                'message' => 'Produk berhasil ditambahkan!!',
-                'data' => $product,
-            ], 201);
-            
-        } catch (\Throwable $e) {
-            Log::error('Error saat menambah product', [
-                'message' => $e->getMessage(),
-            ]);
-            
-            // Added a return response for the error state
-            return response()->json([
-                'message' => 'Terjadi kesalahan pada server.',
-                'error' => $e->getMessage() // Optional: remove in production
-            ], 500);
-        }
+        return response()->json([
+            'message' => 'Produk berhasil ditambahkan!!',
+            'data' => $product,
+        ], 201);
+    } catch (\Throwable $e) {
+        return response()->json(['message' => $e->getMessage()], 500);
     }
+}
 
     /**
      * Display the specified resource.
@@ -87,16 +81,55 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        //
+    public function update(StoreProductRequest $request, int $id)
+{
+    try {
+        $product = Product::find($id);
+
+        if (!$product) {
+            return response()->json(['message' => 'Product tidak ditemukan'], 404);
+        }
+
+        // Cek Otorisasi (Hanya pemilik yang bisa update)
+        if ($product->user_id !== Auth::id()) {
+            return response()->json(['message' => 'Forbidden'], 403);
+        }
+
+        $product->update($request->validated());
+
+        return response()->json([
+            'message' => 'Produk berhasil diperbarui!',
+            'data' => $product
+        ], 200);
+    } catch (\Throwable $e) {
+        return response()->json(['message' => $e->getMessage()], 500);
     }
+}
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-        //
+    public function destroy(int $id)
+{
+    try {
+        $product = Product::find($id);
+
+        if (!$product) {
+            return response()->json(['message' => 'Product tidak ditemukan'], 404);
+        }
+
+        // Cek Otorisasi (Hanya pemilik yang bisa delete)
+        if ($product->user_id !== Auth::id()) {
+            return response()->json(['message' => 'Forbidden'], 403);
+        }
+
+        $product->delete();
+
+        return response()->json([
+            'message' => 'Produk berhasil dihapus!'
+        ], 200); // Atau 204 No Content
+    } catch (\Throwable $e) {
+        return response()->json(['message' => $e->getMessage()], 500);
     }
+}
 }
